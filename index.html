@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kopibok Nord-Odal fattigstyre</title>
+<meta name="description" content="Digital transkripsjon av Kopibok for Nord-Odal fattigstyre 1846–1884, Innlandet fylkesarkiv / IKA Opplandene">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4efe4;
+    --surface: #fbf8f1;
+    --ink: #2b2620;
+    --ink-soft: #6b6155;
+    --rule: #ddd3c1;
+    --accent: #8a3b1f;
+    --accent-soft: rgba(138, 59, 31, 0.10);
+    --hl-fill: rgba(196, 120, 40, 0.20);
+    --hl-stroke: #b5651d;
+    --show-fill: rgba(70, 110, 160, 0.07);
+    --show-stroke: rgba(70, 110, 160, 0.5);
+    --unc: #9a6a00;
+    --tip-bg: #2b2620;
+    --tip-ink: #fbf8f1;
+    --viewer-bg: #1d1a16;
+    --viewer-ctrl: rgba(251, 248, 241, 0.92);
+    --shadow: 0 1px 2px rgba(40,30,20,.08), 0 8px 24px rgba(40,30,20,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17140f; --surface: #201c16; --ink: #ece4d4; --ink-soft: #a89c89;
+      --rule: #3a332a; --accent: #e0956b; --accent-soft: rgba(224,149,107,.12);
+      --hl-fill: rgba(230,160,70,.24); --hl-stroke: #f0a650;
+      --show-fill: rgba(130,170,220,.08); --show-stroke: rgba(130,170,220,.5);
+      --unc: #e3b450; --tip-bg: #ece4d4; --tip-ink: #1d1a16; --viewer-bg: #0e0c0a;
+      --viewer-ctrl: rgba(32, 28, 22, 0.92);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17140f; --surface: #201c16; --ink: #ece4d4; --ink-soft: #a89c89;
+    --rule: #3a332a; --accent: #e0956b; --accent-soft: rgba(224,149,107,.12);
+    --hl-fill: rgba(230,160,70,.24); --hl-stroke: #f0a650;
+    --show-fill: rgba(130,170,220,.08); --show-stroke: rgba(130,170,220,.5);
+    --unc: #e3b450; --tip-bg: #ece4d4; --tip-ink: #1d1a16; --viewer-bg: #0e0c0a;
+    --viewer-ctrl: rgba(32, 28, 22, 0.92);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 16px; line-height: 1.5;
+  }
+  a { color: var(--accent); }
+
+  header.site {
+    max-width: 1680px; margin: 0 auto; padding: 24px 24px 16px;
+    border-bottom: 1px solid var(--rule);
+    display: flex; flex-wrap: wrap; gap: 12px 40px; align-items: flex-end;
+  }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 4px; }
+  h1 { font-family: "EB Garamond", Georgia, serif; font-weight: 500; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.12; margin: 0; }
+  h1 .periode { color: var(--ink-soft); font-size: .7em; white-space: nowrap; }
+  .meta { display: grid; grid-template-columns: auto 1fr; gap: 1px 12px; margin: 0; font-size: 13.5px; }
+  .meta dt { color: var(--ink-soft); }
+  .meta dd { margin: 0; }
+
+  .toolbar {
+    max-width: 1680px; margin: 0 auto; padding: 12px 24px;
+    display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center;
+    font-size: 14px; color: var(--ink-soft);
+  }
+  .group { display: flex; gap: 6px; align-items: center; }
+  button, select {
+    font: inherit; font-size: 14px; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 6px; padding: 5px 11px; cursor: pointer; min-height: 32px;
+  }
+  button:hover:not(:disabled), select:hover { border-color: var(--accent); }
+  button:disabled { opacity: .45; cursor: default; }
+  button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  select { padding-right: 6px; max-width: 280px; }
+  .hint { margin-left: auto; font-size: 13px; }
+
+  main {
+    max-width: 1680px; margin: 0 auto; padding: 0 24px 32px;
+    display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+    gap: 20px; align-items: start;
+  }
+
+  /* ---------- Betrakter ---------- */
+  .viewer {
+    position: sticky; top: 16px;
+    height: calc(100vh - 32px); min-height: 420px;
+    background: var(--viewer-bg); border-radius: 10px; box-shadow: var(--shadow);
+    overflow: hidden; touch-action: none; cursor: grab;
+    user-select: none; -webkit-user-select: none;
+  }
+  .viewer.dragging { cursor: grabbing; }
+  .stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+  .stage.animate { transition: transform .35s ease; }
+  .stage img { display: block; width: 100%; height: 100%; -webkit-user-drag: none; pointer-events: none; }
+  .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .zone { fill: transparent; stroke: transparent; cursor: pointer; transition: fill .12s, stroke .12s; vector-effect: non-scaling-stroke; }
+  .viewer.dragging .zone { cursor: grabbing; }
+  .show-lines .zone { fill: var(--show-fill); stroke: var(--show-stroke); stroke-width: 1.2; }
+  .zone.active { fill: var(--hl-fill); stroke: var(--hl-stroke); stroke-width: 2; }
+  .zone.locked { fill: var(--hl-fill); stroke: var(--hl-stroke); stroke-width: 3; }
+
+  .vctrl {
+    position: absolute; right: 12px; bottom: 12px; z-index: 2;
+    display: flex; flex-direction: column; gap: 4px;
+    background: var(--viewer-ctrl); border-radius: 8px; padding: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.25);
+  }
+  .vctrl button { width: 36px; height: 36px; padding: 0; border: 0; background: transparent; font-size: 20px; line-height: 1; }
+  .vctrl button:hover { background: var(--accent-soft); }
+  .vctrl .pct { font-size: 11px; text-align: center; color: var(--ink-soft); padding: 2px 0; }
+  .vside {
+    position: absolute; left: 12px; top: 12px; z-index: 2;
+    background: var(--viewer-ctrl); color: var(--ink); border-radius: 6px;
+    padding: 4px 10px; font-size: 13px; box-shadow: 0 2px 10px rgba(0,0,0,.25);
+  }
+  .loading { position: absolute; inset: 0; display: grid; place-items: center; color: #bbb; font-size: 14px; }
+
+  /* ---------- Verktøytips ---------- */
+  .tip {
+    position: fixed; z-index: 20; pointer-events: none;
+    max-width: min(560px, calc(100vw - 32px));
+    background: var(--tip-bg); color: var(--tip-ink);
+    padding: 10px 14px; border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.25);
+    font-family: "EB Garamond", Georgia, serif; font-size: 19px; line-height: 1.35;
+    opacity: 0; transform: translateY(4px); transition: opacity .1s, transform .1s;
+  }
+  .tip.on { opacity: 1; transform: none; }
+  .tip .m { display: block; font-family: "Source Sans 3", sans-serif; font-size: 12px; letter-spacing: .03em; opacity: .7; margin-bottom: 3px; }
+  .tip .n { display: block; font-family: "Source Sans 3", sans-serif; font-size: 13px; font-style: italic; opacity: .8; margin-top: 5px; }
+  .tip .unc, .tip .gap { color: inherit; opacity: .7; }
+
+  /* ---------- Lesetekst ---------- */
+  .reader { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow); padding: 4px 0 16px; }
+  .reader > h2 { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin: 14px 20px 2px; }
+  .entry { padding: 14px 20px 10px; border-top: 1px solid var(--rule); }
+  .entry:first-of-type { border-top: 0; }
+  .entry-head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; margin-bottom: 4px; }
+  .entry-date { font-weight: 600; color: var(--accent); font-size: 14px; }
+  .entry-title { font-weight: 500; font-size: 14px; }
+  .regest { font-size: 14px; color: var(--ink-soft); margin: 0 0 8px; }
+  .lines { list-style: none; margin: 0; padding: 0; }
+  .lines li {
+    display: grid; grid-template-columns: 2.2em 1fr; gap: 6px;
+    font-family: "EB Garamond", Georgia, serif; font-size: 18px; line-height: 1.4;
+    padding: 2px 8px; margin: 0 -8px; border-radius: 4px; cursor: pointer;
+  }
+  .lines li .no { font-family: "Source Sans 3", sans-serif; font-size: 11px; color: var(--ink-soft); padding-top: 5px; text-align: right; }
+  .lines li:hover, .lines li.active { background: var(--accent-soft); }
+  .lines li.locked { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+  .lines .marg { font-family: "Source Sans 3", sans-serif; font-size: 12px; color: var(--accent); margin-right: 6px; }
+  .lines .n { display: block; font-family: "Source Sans 3", sans-serif; font-size: 12.5px; color: var(--ink-soft); font-style: italic; }
+
+  .unc { color: var(--unc); font-size: .78em; vertical-align: super; font-family: "Source Sans 3", sans-serif; }
+  .unc-word { border-bottom: 1px dotted var(--unc); }
+  .gap { color: var(--unc); font-family: "Source Sans 3", sans-serif; font-size: .85em; }
+  del { text-decoration-thickness: 1.5px; opacity: .7; }
+
+  .legend { margin: 16px 20px 0; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink-soft); }
+  .legend dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 6px 0 0; }
+  .legend dt { font-family: "EB Garamond", Georgia, serif; font-size: 16px; }
+  .legend dd { margin: 0; }
+
+  .pager { display: flex; justify-content: space-between; gap: 8px; margin: 16px 20px 0; }
+
+  footer { max-width: 1680px; margin: 0 auto; padding: 16px 24px 32px; font-size: 13px; color: var(--ink-soft); border-top: 1px solid var(--rule); }
+
+  @media (max-width: 960px) {
+    main { grid-template-columns: 1fr; }
+    .viewer { position: relative; top: 0; height: 70vh; }
+    .hint { margin-left: 0; width: 100%; }
+  }
+  @media (max-width: 520px) {
+    header.site, .toolbar, main, footer { padding-left: 16px; padding-right: 16px; }
+    .tip { font-size: 17px; }
+    .toolbar .group:first-child { width: 100%; }
+    .toolbar .group:first-child select { flex: 1; min-width: 0; max-width: none; }
+    button { white-space: nowrap; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div>
+    <p class="eyebrow">Digital utgave</p>
+    <h1 id="tittel">Kopibok</h1>
+  </div>
+  <dl class="meta" id="meta"></dl>
+</header>
+
+<div class="toolbar">
+  <div class="group" role="group" aria-label="Sider">
+    <button id="forrige" title="Forrige side (←)">‹ Forrige</button>
+    <select id="velgSide" aria-label="Velg side"></select>
+    <button id="neste" title="Neste side (→)">Neste ›</button>
+  </div>
+  <div class="group">
+    <button id="visLinjer" aria-pressed="false">Vis linjer</button>
+    <button id="tema" title="Bytt mellom lyst og mørkt">Lys/mørk</button>
+  </div>
+  <span class="hint">Hold pekeren over en linje for å se transkripsjonen · klikk låser linjen · rull eller knip for å zoome, dra for å flytte</span>
+</div>
+
+<main>
+  <section class="viewer" id="viewer" aria-label="Digitalisat">
+    <div class="loading" id="laster">Laster …</div>
+    <div class="stage" id="stage">
+      <img id="bilde" alt="">
+      <svg id="lag" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+    <div class="vside" id="vside"></div>
+    <div class="vctrl" role="group" aria-label="Zoom">
+      <button id="zinn" title="Zoom inn (+)" aria-label="Zoom inn">+</button>
+      <button id="zut" title="Zoom ut (−)" aria-label="Zoom ut">−</button>
+      <button id="ztilpass" title="Tilpass til vinduet (0)" aria-label="Tilpass til vinduet">⤢</button>
+      <div class="pct" id="pct">100 %</div>
+    </div>
+  </section>
+
+  <aside class="reader" aria-label="Transkripsjon">
+    <h2>Transkripsjon</h2>
+    <div id="innforsler"></div>
+    <div class="pager">
+      <button id="forrige2">‹ Forrige side</button>
+      <button id="neste2">Neste side ›</button>
+    </div>
+    <div class="legend">
+      <strong>Tegnforklaring</strong>
+      <dl>
+        <dt><span class="unc">[?]</span></dt><dd>usikker lesning av foregående ord</dd>
+        <dt><span class="gap">[…]</span></dt><dd>uleselig</dd>
+        <dt><span class="unc-word">ord</span></dt><dd>usikkert supplert lesning</dd>
+        <dt><del>tekst</del></dt><dd>overstrøket i originalen</dd>
+      </dl>
+    </div>
+  </aside>
+</main>
+
+<footer id="bunn"></footer>
+
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  "use strict";
+  const K = window.KOPIBOK;
+  const $ = id => document.getElementById(id);
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const viewer = $("viewer"), stage = $("stage"), lag = $("lag"), bilde = $("bilde"), tip = $("tip");
+
+  /* ---------- Hjelpefunksjoner ---------- */
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  function render(s) {
+    let h = esc(s);
+    h = h.replace(/~~(.+?)~~/g, "<del>$1</del>");
+    h = h.replace(/\[…\]/g, '<span class="gap" title="uleselig">[…]</span>');
+    h = h.replace(/\[\?\]/g, '<span class="unc" title="usikker lesning">[?]</span>');
+    h = h.replace(/\[([^\]\[]+?)\?\]/g, '<span class="unc-word" title="usikkert supplert">$1</span>');
+    return h;
+  }
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  /* ---------- Topptekst ---------- */
+  const M = K.meta;
+  $("tittel").innerHTML = `${esc(M.tittel)} <span class="periode">${esc(M.periode)}</span>`;
+  $("meta").innerHTML = `
+    <dt>Arkivskaper</dt><dd>${esc(M.arkivskaper)}</dd>
+    <dt>Oppbevaringssted</dt><dd>${esc(M.oppbevaringssted)}</dd>
+    <dt>Referanse</dt><dd><a href="${esc(M.arkivportalen)}" target="_blank" rel="noopener">${esc(M.referanseFull)}</a></dd>`;
+  $("bunn").innerHTML = `Transkripsjon: ${esc(M.status)}. Linjedeling som i originalen. Digitalisat: ${esc(M.digitalisat)}. Originalen oppbevares ved ${esc(M.oppbevaringssted)} (${esc(M.referanseFull)}).`;
+
+  /* ---------- Last inn sidefilene ---------- */
+  function lastSkript(src) {
+    return new Promise((ok, feil) => {
+      const s = document.createElement("script");
+      s.src = src; s.onload = ok; s.onerror = () => feil(new Error("Fant ikke " + src));
+      document.head.appendChild(s);
+    });
+  }
+
+  let sider = [];
+  (async function start() {
+    for (const f of K.sider) {
+      try { await lastSkript(f); } catch (e) { console.warn(e.message); }
+    }
+    sider = Object.values(K.data);
+    const rekke = K.sider.map(f => f.replace(/^.*\/|\.js$/g, ""));
+    sider.sort((a, b) => rekke.indexOf(a.id) - rekke.indexOf(b.id));
+    if (!sider.length) { $("laster").textContent = "Ingen sider funnet."; return; }
+
+    $("velgSide").innerHTML = sider.map((s, i) => `<option value="${i}">Side ${i + 1} av ${sider.length} – ${esc(s.etikett || s.id)}</option>`).join("");
+    const h = lesHash();
+    visSide(clamp((h.side || 1) - 1, 0, sider.length - 1), h.linje);
+  })();
+
+  /* ---------- Tilstand ---------- */
+  let side = null, sideNr = 0, linjer = [], soner = [], punkter = [];
+  let hover = null, laast = null;
+  let s = 1, tx = 0, ty = 0, sMin = 0.1;
+  const S_MAX = 4;
+
+  /* ---------- Vis en side ---------- */
+  function visSide(i, linjeNr) {
+    sideNr = i; side = sider[i];
+    hover = laast = null; skjulTip();
+    $("velgSide").value = i;
+    ["forrige", "forrige2"].forEach(id => $(id).disabled = i === 0);
+    ["neste", "neste2"].forEach(id => $(id).disabled = i === sider.length - 1);
+    $("vside").textContent = `Side ${i + 1} av ${sider.length}`;
+
+    const W = side.bredde, H = side.hoyde, [sx1, sx2] = side.standardspalte || [0, W];
+    stage.style.width = W + "px"; stage.style.height = H + "px";
+    lag.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    $("laster").style.display = "grid";
+    bilde.onload = () => { $("laster").style.display = "none"; };
+    bilde.src = side.bilde;
+    bilde.alt = `Digitalisat: ${M.tittel}, ${side.etikett || ""}`;
+
+    /* linjer med nummer og boks */
+    let n = 0;
+    linjer = side.linjer.map((l, idx) => {
+      const o = Object.assign({}, l, { idx });
+      o.no = l.type ? "" : String(++n);
+      if (!o.boks && !o.punkter) o.boks = [sx1, l.y - 18, sx2, l.y + 19];
+      if (!o.boks && o.punkter) {
+        const p = o.punkter.trim().split(/\s+/).map(q => q.split(",").map(Number));
+        const xs = p.map(q => q[0]), ys = p.map(q => q[1]);
+        o.boks = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+      }
+      return o;
+    });
+
+    /* soner i bildet */
+    lag.innerHTML = "";
+    soner = linjer.map(l => {
+      let el;
+      if (l.punkter) {
+        el = document.createElementNS(SVGNS, "polygon");
+        el.setAttribute("points", l.punkter);
+      } else {
+        const [x1, y1, x2, y2] = l.boks;
+        el = document.createElementNS(SVGNS, "rect");
+        el.setAttribute("x", x1); el.setAttribute("y", y1);
+        el.setAttribute("width", x2 - x1); el.setAttribute("height", y2 - y1);
+        el.setAttribute("rx", 4);
+      }
+      el.setAttribute("class", "zone");
+      el.dataset.idx = l.idx;
+      lag.appendChild(el);
+      return el;
+    });
+
+    /* lesetekst */
+    const wrap = $("innforsler");
+    wrap.innerHTML = "";
+    punkter = [];
+    const inn = side.innforsler && side.innforsler.length ? side.innforsler : [{ id: "_alle", dato: "", tittel: "", regest: "" }];
+    inn.forEach(e => {
+      const egne = linjer.filter(l => (l.inn || "_alle") === e.id);
+      if (!egne.length) return;
+      const sec = document.createElement("section");
+      sec.className = "entry";
+      sec.innerHTML = `<div class="entry-head">${e.dato ? `<span class="entry-date">${esc(e.dato)}</span>` : ""}${e.tittel ? `<span class="entry-title">${esc(e.tittel)}</span>` : ""}</div>
+        ${e.regest ? `<p class="regest">${esc(e.regest)}</p>` : ""}<ol class="lines"></ol>`;
+      const ol = sec.querySelector("ol");
+      egne.forEach(l => {
+        const li = document.createElement("li");
+        li.dataset.idx = l.idx;
+        li.innerHTML = `<span class="no">${l.no}</span><span>${l.marg ? `<span class="marg">${esc(l.marg)}</span>` : ""}${render(l.tekst)}${l.merknad ? `<span class="n">${esc(l.merknad)}</span>` : ""}</span>`;
+        ol.appendChild(li);
+        punkter[l.idx] = li;
+      });
+      wrap.appendChild(sec);
+    });
+
+    tilpass(false);
+    if (linjeNr) {
+      const l = linjer.find(x => x.no === String(linjeNr));
+      if (l) { laast = l.idx; mal(); flyTil(l.idx); }
+    }
+    oppdaterHash();
+  }
+
+  /* ---------- Fremheving ---------- */
+  function mal() {
+    soner.forEach((z, i) => { z.classList.toggle("active", i === hover); z.classList.toggle("locked", i === laast); });
+    punkter.forEach((li, i) => { if (!li) return; li.classList.toggle("active", i === hover); li.classList.toggle("locked", i === laast); });
+  }
+
+  /* ---------- Verktøytips ---------- */
+  function tipHTML(l) {
+    const e = (side.innforsler || []).find(x => x.id === l.inn);
+    const typ = { etikett: "Etikett", tittel: "Tittel", topp: "Topptekst", randnotat: "Randnotat" }[l.type];
+    const m = [e && e.dato, l.no ? "Linje " + l.no : typ].filter(Boolean).join(" · ");
+    return `<span class="m">${esc(m)}</span>${l.marg ? `<em>${esc(l.marg)}</em> · ` : ""}${render(l.tekst)}${l.merknad ? `<span class="n">${esc(l.merknad)}</span>` : ""}`;
+  }
+  function visTip(l, cx, cy) {
+    tip.innerHTML = tipHTML(l);
+    tip.classList.add("on");
+    const pad = 16, w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = cx + 18, y = cy + 22;
+    if (x + w > innerWidth - pad) x = Math.max(pad, cx - w - 18);
+    if (y + h > innerHeight - pad) y = Math.max(pad, cy - h - 18);
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
+  function skjulTip() { tip.classList.remove("on"); }
+
+  /* ---------- Zoom og panorering ---------- */
+  function bruk(anim) {
+    stage.classList.toggle("animate", !!anim);
+    stage.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+    $("pct").textContent = Math.round(s * 100) + " %";
+    if (anim) setTimeout(() => stage.classList.remove("animate"), 380);
+  }
+  function begrens() {
+    const vw = viewer.clientWidth, vh = viewer.clientHeight;
+    const w = side.bredde * s, h = side.hoyde * s;
+    tx = w <= vw ? (vw - w) / 2 : clamp(tx, vw - w, 0);
+    ty = h <= vh ? (vh - h) / 2 : clamp(ty, vh - h, 0);
+  }
+  function tilpass(anim) {
+    if (!side) return;
+    const vw = viewer.clientWidth, vh = viewer.clientHeight;
+    sMin = Math.min(vw / side.bredde, vh / side.hoyde);
+    s = sMin; begrens(); bruk(anim);
+  }
+  function zoomVed(faktor, cx, cy, anim) {
+    const s2 = clamp(s * faktor, sMin, S_MAX);
+    tx = cx - (cx - tx) * (s2 / s);
+    ty = cy - (cy - ty) * (s2 / s);
+    s = s2; begrens(); bruk(anim);
+  }
+  function flyTil(idx) {
+    const [x1, y1, x2, y2] = linjer[idx].boks;
+    const vw = viewer.clientWidth, vh = viewer.clientHeight;
+    s = clamp(Math.min(vw * 0.92 / (x2 - x1), vh * 0.3 / (y2 - y1)), sMin, 2.5);
+    tx = vw / 2 - ((x1 + x2) / 2) * s;
+    ty = vh / 2 - ((y1 + y2) / 2) * s;
+    begrens(); bruk(true);
+  }
+  const midt = () => [viewer.clientWidth / 2, viewer.clientHeight / 2];
+
+  viewer.addEventListener("wheel", e => {
+    e.preventDefault();
+    const r = viewer.getBoundingClientRect();
+    const d = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
+    zoomVed(Math.exp(-d * 0.0015), e.clientX - r.left, e.clientY - r.top);
+    skjulTip();
+  }, { passive: false });
+
+  viewer.addEventListener("dblclick", e => {
+    const r = viewer.getBoundingClientRect();
+    zoomVed(2, e.clientX - r.left, e.clientY - r.top, true);
+  });
+
+  /* pekerhendelser: dra, knip, klikk */
+  const pekere = new Map();
+  let start = null, drar = false, knip = null;
+
+  viewer.addEventListener("pointerdown", e => {
+    if (e.target.closest(".vctrl")) return;
+    pekere.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pekere.size === 1) { start = { x: e.clientX, y: e.clientY, tx, ty }; drar = false; }
+    if (pekere.size === 2) {
+      const [a, b] = [...pekere.values()];
+      knip = { d: Math.hypot(a.x - b.x, a.y - b.y), s };
+      drar = true;
+    }
+  });
+
+  viewer.addEventListener("pointermove", e => {
+    if (pekere.has(e.pointerId)) {
+      pekere.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pekere.size === 2 && knip) {
+        const [a, b] = [...pekere.values()];
+        const r = viewer.getBoundingClientRect();
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+        zoomVed((knip.s * d / knip.d) / s, (a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top);
+        skjulTip();
+        return;
+      }
+      if (start && pekere.size === 1) {
+        const dx = e.clientX - start.x, dy = e.clientY - start.y;
+        if (!drar && Math.hypot(dx, dy) > 5) {
+          drar = true; viewer.classList.add("dragging"); skjulTip();
+          try { viewer.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+        if (drar) { tx = start.tx + dx; ty = start.ty + dy; begrens(); bruk(); }
+      }
+      return;
+    }
+    /* mus uten knapp: sveving */
+    if (e.pointerType !== "mouse") return;
+    const z = e.target.closest && e.target.closest(".zone");
+    if (!z) {
+      if (hover !== null) { hover = null; mal(); }
+      if (laast === null) skjulTip();
+      return;
+    }
+    const i = +z.dataset.idx;
+    if (hover !== i) { hover = i; mal(); }
+    visTip(linjer[i], e.clientX, e.clientY);
+  });
+
+  function slipp(e) {
+    const varKlikk = pekere.size === 1 && !drar;
+    pekere.delete(e.pointerId);
+    if (pekere.size < 2) knip = null;
+    if (pekere.size === 0) {
+      viewer.classList.remove("dragging");
+      if (varKlikk && e.type === "pointerup") {
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const z = el && el.closest && el.closest(".zone");
+        if (z) {
+          const i = +z.dataset.idx;
+          laast = laast === i ? null : i;
+          mal();
+          if (laast !== null) {
+            visTip(linjer[i], e.clientX, e.clientY);
+            punkter[i] && punkter[i].scrollIntoView({ block: "nearest", behavior: "smooth" });
+          } else skjulTip();
+        } else { laast = null; mal(); skjulTip(); }
+        oppdaterHash();
+      }
+      start = null; drar = false;
+    }
+  }
+  viewer.addEventListener("pointerup", slipp);
+  viewer.addEventListener("pointercancel", slipp);
+  viewer.addEventListener("pointerleave", e => {
+    if (e.pointerType === "mouse" && !pekere.size) { hover = null; mal(); if (laast === null) skjulTip(); }
+  });
+
+  $("zinn").addEventListener("click", () => zoomVed(1.5, ...midt(), true));
+  $("zut").addEventListener("click", () => zoomVed(1 / 1.5, ...midt(), true));
+  $("ztilpass").addEventListener("click", () => tilpass(true));
+  new ResizeObserver(() => {
+    if (!side) return;
+    const gammel = sMin;
+    sMin = Math.min(viewer.clientWidth / side.bredde, viewer.clientHeight / side.hoyde);
+    if (s <= gammel + 1e-6) s = sMin; else s = Math.max(s, sMin);
+    begrens(); bruk();
+  }).observe(viewer);
+
+  /* ---------- Lesetekst ---------- */
+  const wrap = $("innforsler");
+  wrap.addEventListener("mouseover", e => {
+    const li = e.target.closest("li[data-idx]"); if (!li) return;
+    hover = +li.dataset.idx; mal();
+  });
+  wrap.addEventListener("mouseleave", () => { hover = null; mal(); });
+  wrap.addEventListener("click", e => {
+    const li = e.target.closest("li[data-idx]"); if (!li) return;
+    const i = +li.dataset.idx;
+    laast = laast === i ? null : i;
+    mal(); skjulTip();
+    if (laast !== null) flyTil(i);
+    oppdaterHash();
+  });
+
+  /* ---------- Sidebytte, adresse, tastatur ---------- */
+  const gaTil = i => { if (i >= 0 && i < sider.length && i !== sideNr) visSide(i); };
+  $("forrige").onclick = $("forrige2").onclick = () => gaTil(sideNr - 1);
+  $("neste").onclick = $("neste2").onclick = () => gaTil(sideNr + 1);
+  $("velgSide").onchange = e => gaTil(+e.target.value);
+
+  function lesHash() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    return { side: parseInt(p.get("side"), 10) || null, linje: parseInt(p.get("linje"), 10) || null };
+  }
+  function oppdaterHash() {
+    const p = new URLSearchParams();
+    p.set("side", sideNr + 1);
+    const l = laast !== null ? linjer[laast] : null;
+    if (l && l.no) p.set("linje", l.no);
+    history.replaceState(null, "", "#" + p.toString());
+  }
+
+  document.addEventListener("keydown", e => {
+    if (e.target.matches("input, select, textarea")) return;
+    if (e.key === "ArrowLeft") gaTil(sideNr - 1);
+    else if (e.key === "ArrowRight") gaTil(sideNr + 1);
+    else if (e.key === "+" || e.key === "=") zoomVed(1.5, ...midt(), true);
+    else if (e.key === "-") zoomVed(1 / 1.5, ...midt(), true);
+    else if (e.key === "0") tilpass(true);
+    else if (e.key === "Escape") { laast = null; mal(); skjulTip(); oppdaterHash(); }
+  });
+
+  $("visLinjer").addEventListener("click", e => {
+    const on = e.currentTarget.getAttribute("aria-pressed") !== "true";
+    e.currentTarget.setAttribute("aria-pressed", on);
+    viewer.classList.toggle("show-lines", on);
+  });
+  $("tema").addEventListener("click", () => {
+    const r = document.documentElement;
+    const mork = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    r.dataset.theme = mork ? "light" : "dark";
+  });
+})();
+</script>
+</body>
+</html>
